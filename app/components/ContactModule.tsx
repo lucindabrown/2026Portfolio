@@ -51,7 +51,7 @@ export default function ContactModule({
           <h2 className="font-sans text-[38px] font-black leading-tight tracking-[-0.04em] md:text-[64px] md:leading-[72px]">
             {headline}
           </h2>
-          {body && (
+          {body && status !== "success" && (
             <p className="font-sans text-[18px] leading-[1.3] tracking-[-0.04em] md:text-[22px] md:leading-[28px]">
               {body}
             </p>
