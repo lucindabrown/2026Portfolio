@@ -18,13 +18,28 @@ export default function ContactModule({
   backgroundColor = "#fffdee",
 }: ContactModuleProps) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; message?: string }>({});
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("submitting");
     const form = e.currentTarget;
     const data = new FormData(form);
+    const name = (data.get("name") as string).trim();
+    const email = (data.get("email") as string).trim();
+    const message = (data.get("message") as string).trim();
 
+    const errors: { name?: string; email?: string; message?: string } = {};
+    if (!name) errors.name = "Please share your name";
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "Please enter a valid email address";
+    if (!message) errors.message = "Please share a note about what you're working on";
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    setFieldErrors({});
+    setStatus("submitting");
     const res = await fetch("https://formspree.io/f/mqegqzpw", {
       method: "POST",
       body: data,
@@ -62,26 +77,28 @@ export default function ContactModule({
               Thanks! I'll be in touch soon.
             </p>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
               <div className="flex flex-col gap-3">
                 <label htmlFor="name" className={labelClass}>Your name</label>
-                <input id="name" name="name" required className={inputClass} />
+                <input id="name" name="name" className={inputClass} />
+                {fieldErrors.name && <p className="text-right font-sans text-base text-[#FF0AC4]">{fieldErrors.name}</p>}
               </div>
               <div className="flex flex-col gap-3">
                 <label htmlFor="email" className={labelClass}>Email</label>
-                <input id="email" name="email" type="email" required className={inputClass} />
+                <input id="email" name="email" type="email" className={inputClass} />
+                {fieldErrors.email && <p className="text-right font-sans text-base text-[#FF0AC4]">{fieldErrors.email}</p>}
               </div>
               <div className="flex flex-col gap-3">
                 <label htmlFor="message" className={labelClass}>What would you like to discuss?</label>
                 <textarea
                   id="message"
                   name="message"
-                  required
                   className="w-full rounded-xl border-[3px] border-[#ffeae3] bg-[#fffbdc] px-4 py-4 h-[137px] font-sans text-[18px] tracking-[-0.04em] md:text-[22px] outline-none focus:border-black transition-colors resize-none"
                 />
+                {fieldErrors.message && <p className="text-right font-sans text-base text-[#FF0AC4]">{fieldErrors.message}</p>}
               </div>
               {status === "error" && (
-                <p className="text-red-600 font-sans text-base">Something went wrong — please try again.</p>
+                <p className="text-right font-sans text-base text-[#FF0AC4]">Something went wrong — please try again.</p>
               )}
               <button
                 type="submit"
