@@ -7,6 +7,12 @@ export default function Header() {
   const [lastY, setLastY] = useState(0);
 
   useEffect(() => {
+    if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+      document.body.classList.add("is-safari");
+    }
+  }, []);
+
+  useEffect(() => {
     function onScroll() {
       const y = window.scrollY;
       setVisible(y < lastY || y < 10);
@@ -20,7 +26,7 @@ export default function Header() {
     <header
       className="fixed top-0 left-0 right-0 z-50 px-6 transition-transform duration-300"
       style={{
-        backgroundColor: "#F7F2F6",
+        backgroundColor: "#FFEFFF",
         transform: visible ? "translateY(0)" : "translateY(-100%)",
       }}
     >
