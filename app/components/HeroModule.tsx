@@ -44,7 +44,7 @@ export default function HeroModule({
       <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16 lg:px-16 xl:gap-[80px] xl:px-[108px]">
         {/* Text */}
         <AnimateIn duration={600} delay={0} className="flex flex-col gap-8 text-black lg:w-[420px] lg:shrink-0 xl:w-[480px]">
-          <h1 className="font-sans text-[38px] font-black leading-[40px] tracking-[-0.04em] md:text-[64px] md:leading-[68px]">
+          <h1 className="font-sans text-[28px] font-black leading-[40px] tracking-[-0.04em] md:text-[64px] md:leading-[68px]">
             {headline}
             {accentText && (
               <span className="block mt-6" style={{ color: accentColor }}>{accentText}</span>
